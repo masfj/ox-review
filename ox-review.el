@@ -4,7 +4,7 @@
 
 ;; Author: Masashi Fujimoto
 ;; Created: 2022-03-27
-;; Version: 0.1.1
+;; Version: 0.1.2
 ;; Keywords: outlines, hypermedia
 ;; URL: https://github.com/masfj/ox-review
 ;; Package-Requires: ((emacs "26.1") (org "9"))
