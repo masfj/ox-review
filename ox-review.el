@@ -4,7 +4,7 @@
 
 ;; Author: Masashi Fujimoto
 ;; Created: 2022-03-27
-;; Version: 0.1.0
+;; Version: 0.1.1
 ;; Keywords: outlines, hypermedia
 ;; URL: https://github.com/masfj/ox-review
 ;; Package-Requires: ((emacs "26.1") (org "9"))
@@ -214,7 +214,7 @@ The function result will be used in the section format string."
 (defun org-review--empty (_empty _contents _info)
   "Transcode a element from Org to empty string.
 EMPTY is object.  CONTENTS is object.
-INFO is a plit holding contextural informatin."
+INFO is a plit holding contextual informatin."
   "")
 
 (defun org-review--get-attributes (blob)
@@ -509,7 +509,7 @@ INFO is a plist holding contextual information."
 
 ;;;; Item
 (defun org-review--get-item-depth (item)
-  "Get the nasted level of ITEM."
+  "Get the nested level of ITEM."
   (let ((parent (org-export-get-parent item)))
     (pcase (org-element-type parent)
       ('item (org-review--get-item-depth parent))
@@ -701,7 +701,7 @@ CONTENTS is nil.
 INFO is a plist holding contextual information."
   (concat "//noindent\n"
           (mapconcat
-           'identity
+           #'identity
            (delq nil
                  (list
                   (let ((closed (org-element-property :closed planning)))
