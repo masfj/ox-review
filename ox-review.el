@@ -214,7 +214,7 @@ The function result will be used in the section format string."
 (defun org-review--empty (_empty _contents _info)
   "Transcode a element from Org to empty string.
 EMPTY is object.  CONTENTS is object.
-INFO is a plit holding contextual informatin."
+INFO is a plit holding contextual information."
   "")
 
 (defun org-review--get-attributes (blob)
