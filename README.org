@@ -7,7 +7,9 @@ Generate .re files ([[https://reviewml.org/][Re:VIEW]] format files) directly fr
 * Usage
 This package is not in MELPA or other package repositories.
 
-You need to download (or git clone) and place the ox-review.el file in a directory on your emacs load path and require it. And, you want to load this package along wigh org-mode, you need to add the following snippet to your Emacs configration:
+You need to download (or git clone) and place the ox-review.el file in a directory on your emacs load path and require it.
+
+you want to load this package along wigh org-mode, you need to add the following snippet to your Emacs configration:
 
 #+begin_src emacs-lisp
   (eval-after-load "org"
