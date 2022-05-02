@@ -4,15 +4,35 @@
 * What is this?
 Generate .re files ([[https://reviewml.org/][Re:VIEW]] format files) directly from org-mode.
 
-* Usage
-This package is not in MELPA or other package repositories.
+* Install
+You can install from MELPA repository.
 
-You need to download (or git clone) and place the ox-review.el file in a directory on your emacs load path and require it.
+#+begin_example
+M-x package-install [RET] ox-review [RET]
+#+end_example
 
-you want to load this package along wigh org-mode, you need to add the following snippet to your Emacs configration:
+If ox-review not found, try the follwing action and install again.
+
+#+begin_example
+M-x package-refresh-contents
+#+end_example
+
+To use the package, write the following code in your init file:
 
 #+begin_src emacs-lisp
-  (eval-after-load "org"
-    '(require 'ox-review))
+  (require 'ox-review)
 #+end_src
+
+or if you are using use-package:
+
+#+begin_src emacs-lisp
+  (use-package ox-review
+    :ensure t
+#+end_src
+
+
+* Usage
+
+
+
 
