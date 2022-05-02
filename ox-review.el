@@ -4,7 +4,7 @@
 
 ;; Author: Masashi Fujimoto
 ;; Created: 2022-03-27
-;; Version: 0.1.2
+;; Version: 0.2.0
 ;; Keywords: outlines, hypermedia
 ;; URL: https://github.com/masfj/ox-review
 ;; Package-Requires: ((emacs "26.1") (org "9"))
@@ -421,6 +421,16 @@ See `ox-review-format-headline-function' for details."
                         tags
                         " ")))))
 
+(defun ox-review--get-headline-type (headline)
+  "Type of HEADLINE."
+  (let ((type-string (downcase (or (org-element-property :HEADLINE_TYPE headline) ""))))
+    (pcase type-string
+      ("column" "[column]")
+      ("nonum" "[nonum]")
+      ("nodisp" "[nodisp]")
+      ("notoc" "[notoc]")
+      (_ ""))))
+
 (defun ox-review-headline (headline contents info)
   "Transcode a HEADLINE element from Org to Re:VIEW.
 CONTENTS holds the contents of the headline.
@@ -436,23 +446,11 @@ INFO is a plist holding contextual information."
            (tags (and (plist-get info :with-tags)
                       (org-export-get-tags headline info)))
            (title (org-export-data (org-element-property :title headline) info))
-           (type (org-element-property :HEADLINE_TYPE headline))
            (full-title (funcall (plist-get info :review-format-headline-function)
                                 todo todo-type priority title tags info)))
       (format "\n%s%s %s\n%s"
               (make-string level ?=)
-              (if (null type)
-                  ""
-                (cond
-                 ((string= (downcase type) "nonum")
-                  "[nonum]")
-                 ((string= (downcase type) "nodisp")
-                  "[nodisp]")
-                 ((string= (downcase type) "notoc")
-                  "[notoc]")
-                 ((string= (downcase type) "column")
-                  "[column]")
-                 (t "")))
+              (ox-review--get-headline-type headline)
               full-title
               (or contents "")))))
 
@@ -753,11 +751,27 @@ INFO is a plist holding contextual information."
   contents)
 
 ;;;; Special block
-(defun ox-review-special-block (_special-block contents _info)
+(defun ox-review-special-block (special-block contents info)
   "Transcode a SPECIAL-BLOCK element from Org to Re:VIEW.
 CONTENTS holds the contents of the block.
 INFO is a plist holding contextual information."
-  contents)
+  (let ((block-type (org-element-property :type special-block)))
+    (if (and block-type
+             (stringp block-type)
+             (member (downcase block-type) '("review-note" "review-memo"
+                                             "review-tip" "review-info"
+                                             "review-warning" "review-important"
+                                             "review-caution" "review-notice"
+                                             "review-lead")))
+        (let* ((caption (org-export-get-caption special-block))
+               (block-type (downcase block-type))
+               (command (string-remove-prefix "review-" block-type))
+               (caption-opt (if (and caption (not (string= command "lead")))
+                                (format "[%s]" (org-export-data caption info))
+                              ""))
+               (fmt (concat "//" command caption-opt "{\n%s\n//}")))
+          (format fmt contents))
+      contents)))
 
 ;;;; Source code
 (defun ox-review-src-block (src-block contents info)
