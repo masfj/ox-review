@@ -1,18 +1,89 @@
 #+TITLE: ox-review
 #+OPTIONS: ^{}
 
+[[https://melpa.org/#/ox-review][https://melpa.org/packages/ox-review-badge.svg]] [[https://stable.melpa.org/#/ox-review][https://stable.melpa.org/packages/ox-review-badge.svg]]
+
 * What is this?
 Generate .re files ([[https://reviewml.org/][Re:VIEW]] format files) directly from org-mode.
 
-* Usage
-This package is not in MELPA or other package repositories.
+* Install
+You can install from MELPA repository.
 
-You need to download (or git clone) and place the ox-review.el file in a directory on your emacs load path and require it.
+#+begin_example
+M-x package-install [RET] ox-review [RET]
+#+end_example
 
-you want to load this package along wigh org-mode, you need to add the following snippet to your Emacs configration:
+If ox-review not found, try the follwing action and install again.
+
+#+begin_example
+M-x package-refresh-contents [RET]
+#+end_example
+
+To use the package, write the following code in your init file:
 
 #+begin_src emacs-lisp
-  (eval-after-load "org"
-    '(require 'ox-review))
+  (require 'ox-review)
 #+end_src
+
+or if you are using use-package:
+
+#+begin_src emacs-lisp
+  (use-package ox-review
+    :ensure t)
+#+end_src
+
+
+* Usage
+This package adds a dedicated menu to the Org Export Dispatcher (~org-export-dispatch~), and pressing r on the menu activates the menu dedicated to the package. Continues, pressing R (Shift-r) export the conversion results to a temporary file, pressing r export the results to a file.
+
+** Column
+If you want to use columns, add the ~headline_type~ property to the headline as follows:
+
+#+begin_src org
+  ,** Column's
+  :PROPERTIES:
+  :headline_type: column
+  :END:
+
+  This paragraph is in column.
+#+end_src
+
+The ~headline_type~ property contains the following elements:
+- column
+- nonum
+- nodisp
+- notoc
+
+** Special blocks
+
+The following blocks are represented as special blocks.
+
+- note
+- memo
+- tip
+- info
+- warning
+- imoprtant
+- caution
+- notice
+- lead
+
+You must specify "review-" as a prefix for the special block. And only lead block has not caption.
+
+#+begin_src org
+  ,#+begin_review-note
+  This is note block.
+  ,#+end_review-note
+#+end_src
+
+* Limit
+- Some blocks -- example, fixed width, property drawer, verbatim, and verse -- is represented by quote block.
+- Radio target is represented /itaric font/. The link does not work.
+- Ruby text is not supported.
+- InDesign XML extensions is not supported.
+- Vertical writing is not supported.
+- Graph is not supported.
+
+
+
 
