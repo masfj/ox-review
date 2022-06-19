@@ -448,7 +448,7 @@ INFO is a plist holding contextual information."
            (title (org-export-data (org-element-property :title headline) info))
            (full-title (funcall (plist-get info :review-format-headline-function)
                                 todo todo-type priority title tags info)))
-      (format "\n%s%s %s\n%s"
+      (format "\n%s%s %s\n\n%s"
               (make-string level ?=)
               (ox-review--get-headline-type headline)
               full-title
