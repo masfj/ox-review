@@ -474,15 +474,17 @@ INFO is a plist holding contextual information."
   "Transcode an INLINETASK element from Org to Re:VIEW.
 CONTENTS holds the contents of the block.
 INFO is a plist holding contextual information."
-  (let ((title (org-export-data (org-element-property :title inlinetask) info))
-	      (todo (and (plist-get info :with-todo-keywords)
-		               (let ((todo (org-element-property :todo-keyword inlinetask)))
-		                 (and todo (org-export-data todo info)))))
-	      (tags (and (plist-get info :with-tags)
-		               (org-export-get-tags inlinetask info)))
-	      (priority (and (plist-get info :with-priority)
-		                   (org-element-property :priority inlinetask))))
-    (format "%s %s %s %s %s" todo priority title tags contents)))
+  (let* ((title (org-export-data (org-element-property :title inlinetask) info))
+         (todo (and (plist-get info :with-todo-keywords)
+                    (let ((todo (org-element-property :todo-keyword inlinetask)))
+                      (and todo (org-export-data todo info)))))
+         (tags (and (plist-get info :with-tags)
+                    (mapconcat (lambda (tag) (format "@<i>{%s}" tag))
+                               (org-export-get-tags inlinetask info)
+                               " ")))
+         (priority (and (plist-get info :with-priority)
+                        (number-to-string (org-element-property :priority inlinetask)))))
+    (string-join (delq nil (list todo priority title tags contents)) " ")))
 
 ;;;; Inner template
 (defun ox-review-inner-template (contents info)
@@ -547,7 +549,7 @@ INFO is a plist holding contextual information."
        (let* ((term (org-element-property :tag item)))
          (when term
            (setq term (org-export-data term info)))
-         (format " : %s\n      %s\n" term contents))))))
+         (format " : %s\n      %s\n" (or term "") contents))))))
 
 ;;;; Keyword
 (defun ox-review-keyword (_keyword _contents _info)
